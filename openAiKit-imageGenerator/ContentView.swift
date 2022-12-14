@@ -16,7 +16,7 @@ final class ViewModel: ObservableObject{
     func setup() {
         openai = OpenAI(Configuration(
             organization: "Personal",
-            apiKey: "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" // Buraya kenid api anahtarınızı girin.
+            apiKey: "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" // Buraya kenid api anahtarınızı girin.
         ))
     }
     
@@ -53,28 +53,51 @@ struct ContentView: View {
             VStack{
                 if let image = image {
                     Image(uiImage: image)
+                        
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .scaledToFit()
-                        .frame(width: 200, height: 350)
+                        .frame(width: 250, height: 250)
+                        .padding()
+                        .cornerRadius(10)
+                                .overlay(RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.green, lineWidth: 4))
+                                .shadow(radius: 10)
+                                
                     
                 } else {
                     Image(systemName: "theatermask.and.paintbrush")
                         .resizable()
                         .frame(width: 64, height: 64)
                         .padding()
-                    Text("Resmin oluşması için bir tanım girin.")
+                        .foregroundColor(.gray)
+                    Text("Enter a description for AI.")
                 }
                 Spacer()
                 
                 TextField("Two frogs on the bench.", text: $text)
                     .padding()
                     .background(Color.green)
+                    .foregroundColor(.white)
                     .cornerRadius(16)
+                    .fontWeight(.bold)
                 Button("Generate"){
-                    
+                    if !text.trimmingCharacters(in: .whitespaces).isEmpty {
+                        Task {
+                            let result = await viewModel.generateImage(prompt: text)
+                            if result == nil {
+                                print("Failed!")
+                                
+                            }
+                            
+                            self.image = result
+                            
+                        }
+                    }
                 }
                 .foregroundColor(.black)
+                .padding()
+                .fontWeight(.bold)
                 
                       
             }
