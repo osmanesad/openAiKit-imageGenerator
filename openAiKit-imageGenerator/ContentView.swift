@@ -11,7 +11,7 @@ import OpenAIKit
 // MARK: - Kurulum - Setup
 // Buradaki key'i "https://beta.openai.com/account/api-keys" adrsinde üyeliğimizle giriş yaptıktan sonra ilgili bölümden kendimize bir api anahtarı oluşturabiliyoruz.
 
-final class ViewModal: ObservableObject{
+final class ViewModel: ObservableObject{
     private var openai: OpenAI?
     func setup() {
         openai = OpenAI(Configuration(
@@ -44,14 +44,46 @@ final class ViewModal: ObservableObject{
 }
 
 struct ContentView: View {
+    @ObservedObject var viewModel = ViewModel()
+    @State var text = ""
+    @State var image: UIImage?
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            VStack{
+                if let image = image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
+                        .frame(width: 200, height: 350)
+                    
+                } else {
+                    Image(systemName: "theatermask.and.paintbrush")
+                        .resizable()
+                        .frame(width: 64, height: 64)
+                        .padding()
+                    Text("Resmin oluşması için bir tanım girin.")
+                }
+                Spacer()
+                
+                TextField("Two frogs on the bench.", text: $text)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(16)
+                Button("Generate"){
+                    
+                }
+                .foregroundColor(.black)
+                
+                      
+            }
+            .onAppear{
+                viewModel.setup()
+            }
+            .padding()
+            .navigationTitle("AI - Image Generator")
         }
-        .padding()
     }
 }
 
