@@ -16,7 +16,7 @@ final class ViewModel: ObservableObject{
     func setup() {
         openai = OpenAI(Configuration(
             organization: "Personal",
-            apiKey: "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" // Buraya kenid api anahtarınızı girin.
+            apiKey: "" // Buraya kenid api anahtarınızı girin. (Your api key)
         ))
     }
     
